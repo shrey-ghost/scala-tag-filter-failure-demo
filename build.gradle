@@ -1,0 +1,67 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+plugins {
+    id 'java'
+    id 'scala'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.scalatest:scalatest_2.12:3.0.8'
+    testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.7.1'
+    testRuntimeOnly 'co.helmethair:scalatest-junit-runner:0.1.9'
+}
+
+test {
+
+    outputs.cacheIf { false }
+    outputs.upToDateWhen { false }
+
+    testLogging { logging ->
+        events TestLogEvent.FAILED,
+                TestLogEvent.SKIPPED,
+                TestLogEvent.STANDARD_OUT,
+                TestLogEvent.STANDARD_ERROR
+
+        exceptionFormat TestExceptionFormat.FULL
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
+
+    ignoreFailures = true // Always try to run all tests for all modules
+
+    afterSuite { desc, result ->
+
+        if (desc.parent) return // Only summarize results for whole modules
+
+        String summary = "results: ${result.resultType} " +
+                "(" +
+                "${result.testCount} tests, " +
+                "${result.successfulTestCount} successes, " +
+                "${result.failedTestCount} failures, " +
+                "${result.skippedTestCount} skipped" +
+                ") " +
+                "Report file: ${reports.html.entryPoint}"
+        println(summary)
+    }
+
+    useJUnitPlatform {ju ->
+        String includeTagsProp = System.getProperty("includeTags")
+        if (includeTagsProp) {
+            ju.includeTags includeTagsProp
+        }
+        String excludeTagsProp = System.getProperty("excludeTags")
+        if (excludeTagsProp) {
+            ju.excludeTags excludeTagsProp
+        }
+    }
+}
