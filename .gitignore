@@ -1,2 +1,12 @@
+# Java/Scala things
 *.class
 *.log
+
+# IntelliJ Stuff
+.idea/
+
+# Gradle Stuff
+.gradle/
+
+# Build
+build/
