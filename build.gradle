@@ -17,7 +17,7 @@ dependencies {
     implementation 'org.scalatest:scalatest_2.12:3.0.8'
     testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.7.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.7.1'
-    testRuntimeOnly 'co.helmethair:scalatest-junit-runner:0.1.9'
+    testRuntimeOnly 'co.helmethair:scalatest-junit-runner:0.1.10'
 }
 
 test {
